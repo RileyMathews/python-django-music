@@ -1,0 +1,11 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'history/style.css' %}" />
+<h1>Artists</h1>
+<ul>
+    {% for artist in artists %}
+    <li>
+        <a href="{% url 'history:detail' artist.id %}">{{ artist.artist_name }}</a>
+    </li>
+    {% endfor %}
+</ul>
