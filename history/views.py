@@ -20,7 +20,6 @@ class ArtistsView(generic.ListView):
     def get_queryset(self):
         return Artist.objects.all()
 
-
 class DetailView(generic.DetailView):
     model = Artist
     template_name = 'history/detail.html'
