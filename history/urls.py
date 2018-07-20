@@ -5,9 +5,9 @@ from . import views
 app_name = 'history'
 urlpatterns = [
     # ex: /polls/
-    path('', views.index, name='index'),
+    path('', views.IndexView.as_view(), name='index'),
     # ex: /polls/5/
-    path('artists/', views.artists, name='artists'),
+    path('artists/', views.ArtistsView.as_view(), name='artists'),
     # ex: /polls/5/results/
-    path('artists/<int:artist_id>/', views.detail, name='detail'),
+    path('artists/<int:pk>/', views.DetailView.as_view(), name='detail'),
 ]
