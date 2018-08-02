@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.template import loader
-from django.shortcuts import HttpResponse, get_object_or_404, render
+from django.shortcuts import HttpResponse, get_object_or_404, render, redirect
 from django.views import View, generic
 from django.http import HttpResponseRedirect
 from django.views.generic.edit import FormView
@@ -23,15 +23,6 @@ class ArtistsView(generic.ListView):
     def get_queryset(self):
         return Artist.objects.all()
 
-    # def post(self, request, *args, **kwargs):
-    #     print("this post is in artist view")
-    #     form = self.form_class(request.POST)
-    #     if form.is_valid():
-    #         # <process form cleaned data>
-    #         return HttpResponseRedirect('/history/artists')
-
-    #     return render(request, self.template_name, {'form': form})
-
 class DetailView(generic.DetailView):
     model = Artist
     template_name = 'history/detail.html'
@@ -40,13 +31,28 @@ class Artist_Form_View(FormView):
     template_name = 'history/artist_form.html'
     form_class = forms.Artist_Form
 
-    # def post(self, request, *args, **kwargs):
-    #     form = forms.Artist_Form()
-    #     if form.is_valid():
-    #         # <process form cleaned data>
-    #         return HttpResponseRedirect('/history/artists/')
+    def post(self, request):
+        """method to post things to the artist collection
 
-    #     return render(request, self.template_name, {'form': form})
+        Arguments:
+            request {http request} -- auto passed in from the form. defines the http request
 
-    def post(self, request, obj, form, change):
-        obj.save()
+        Returns:
+            http requests -- http requests based on form validation
+        """
+        # checks to see if the request method was a post
+        if request.method == "POST":
+            # if true it grabs the form post
+            form = forms.Artist_Form(request.POST)
+            # checks for form validation
+            if form.is_valid():
+                # saves the info the sql database
+                post = form.save(commit=False)
+                post.save()
+                # returns the user to the artists list
+                return HttpResponseRedirect('/history/artists')
+        else:
+            # else the user will be redirected back to the form
+            form = forms.Artist_Form()
+
+        return render(request, 'history/artist_form.html', {'form': form})
